@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.optim as optim
 from sklearn.metrics import roc_auc_score, accuracy_score
 
-from dataloader import get_dataloaders, set_seed
+from data_loader import get_dataloaders, set_seed
 from model import InteractionPredictionModel_NoAttention, InteractionPredictionModel
 
 

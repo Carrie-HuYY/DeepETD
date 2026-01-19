@@ -1,0 +1,26 @@
+{
+  "pmid": "12345678",
+  "title": "Title of the PubMed article",
+  "abstract": "Abstract text of the article...",
+  "keywords": ["keyword1", "keyword2"],
+  "entities": {
+    "genes": ["PRDX1", "SREBP2"],
+    "metabolites": ["norepinephrine", "sphingosine 1-phosphate"],
+    "diseases": ["atherosclerosis", "hypercalcemia"],
+    "phenotypes": ["oxidative stress", "lipid accumulation"],
+    "subcellular_localizations": ["mitochondria", "cytoplasm"]
+  },
+  "associations": [
+    {
+      "type": "metabolite-protein",
+      "metabolite": "norepinephrine",
+      "protein": "PRDX1",
+      "context": "atherosclerosis"
+    },
+    {
+      "type": "disease-metabolite",
+      "disease": "atherosclerosis",
+      "metabolite": "norepinephrine"
+    }
+  ]
+}

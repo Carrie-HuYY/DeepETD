@@ -3,12 +3,15 @@ import json
 import random
 import numpy as np
 import torch
+import warnings
 from torch.utils.data import DataLoader, Dataset
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
+warnings.filterwarnings('ignore')
+
 # -----------------------------
-# Defaults
+# 默认编码器列表
 # -----------------------------
 DEFAULT_SUBCELLULAR_LOCATIONS = [
     "Nucleus", "Cytoplasm", "Mitochondria", "Endoplasmic Reticulum",
@@ -20,7 +23,7 @@ DEFAULT_SUBCELLULAR_LOCATIONS = [
 ]
 
 # -----------------------------
-# Reproducibility
+# 设置随机种子
 # -----------------------------
 
 def set_seed(seed: int = 42):
@@ -36,7 +39,7 @@ def set_seed(seed: int = 42):
         torch.backends.cudnn.benchmark = False
 
 # -----------------------------
-# Encoders
+# 编码器
 # -----------------------------
 
 def _normalize_list(xs):
@@ -46,7 +49,12 @@ def _normalize_list(xs):
 def build_label_encoders(disease_json_path: str,
                          phenotype_json_path: str,
                          subcellular_locations=None):
-    """Build LabelEncoders for diseases, phenotypes, and subcellular locations.
+    """
+    构建三个标签函数编码器，将疾病/表型/亚细胞定位转换为数值编码
+    :param disease_json_path: 对应Data/disease_list.json
+    :param phenotype_json_path: 对应Data/phenotype.json
+    :param subcellular_locations: 默认使用预定义列表，即'DEFAULT_SUBCELLULAR_LOCATIONS'
+    :return: 返回三个LabelEncoder编码器
     """
     with open(disease_json_path, 'r', encoding='utf-8') as f:
         all_diseases = json.load(f)
@@ -67,6 +75,9 @@ def build_label_encoders(disease_json_path: str,
 # -----------------------------
 
 class InteractionDataset(Dataset):
+    """
+    设置代谢物-蛋白质相互作用的数据集
+    """
     def __init__(self, samples, disease_encoder, phenotype_encoder, subcellular_location_encoder):
         self.samples = samples
         self.disease_encoder = disease_encoder
@@ -108,14 +119,46 @@ class InteractionDataset(Dataset):
 # Samplers & Dataloaders
 # -----------------------------
 
-def _load_json(path):
-    with open(path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+# data_loader.py 中的 _load_json 函数
 
+def _load_json(path):
+    """加载JSON文件"""
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        print(f"✅ 成功加载 JSON 文件: {os.path.abspath(path)}")
+        return data
+    except FileNotFoundError:
+        # 获取当前工作目录和绝对路径
+        current_dir = os.getcwd()
+        abs_path = os.path.abspath(path)
+
+        # 详细错误信息
+        error_msg = f"""
+    ❌ JSON文件未找到！
+   请求的文件路径: {path}
+   绝对路径: {abs_path}
+   当前工作目录: {current_dir}
+"""
 
 def make_samples(positive_json_path: str,
                  negative_json_path: str,
                  text_json_path: str):
+    """
+    构建三种类型（正/负/纯文本）的样本并分配标签
+
+    :param
+        positive_json_path: 正样本（相互作用对）的JSON文件路径
+        negative_json_path: 负样本（非相互作用对）的JSON文件路径
+        text_json_path: 纯文本样本的JSON文件路径（用于推理/预测）
+
+    :return
+        positive_samples: 带标签1的正样本列表
+        negative_samples: 带标签0的负样本列表
+        text_samples: 带标签0的文本样本列表（标签仅占位，推理时不用）
+        all_samples: 正负样本合并的训练集
+    """
+
     positive_data = _load_json(positive_json_path)
     negative_data = _load_json(negative_json_path)
     text_data = _load_json(text_json_path)
@@ -182,6 +225,22 @@ def extract_names_from_text_json(text_json_path: str):
         protein_names.append(entry.get('protein_name', f'protein_{i}'))
         compound_names.append(entry.get('compound_name', f'compound_{i}'))
     return protein_names, compound_names
+
+
+
+if __name__ == '__main__':
+    from Test.data_loader_test import debug_data_pipeline, quick_debug_sample
+
+    print("完整调试模式:")
+    results = debug_data_pipeline(
+        debug_level=2,  # 详细模式
+        batch_size=4
+    )
+
+    print("\n\n" + "=" * 60)
+    print("快速调试模式:")
+    print("=" * 60)
+    quick_debug_sample(sample_index=0)
 
 
 

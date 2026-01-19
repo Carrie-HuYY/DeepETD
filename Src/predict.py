@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import numpy as np
 import torch
-from dataloader import get_dataloaders, extract_names_from_text_json, set_seed
+from data_loader import get_dataloaders, extract_names_from_text_json, set_seed
 from model import InteractionPredictionModel_NoAttention, InteractionPredictionModel
 
 

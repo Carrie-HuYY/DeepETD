@@ -1,28 +1,38 @@
 from datetime import datetime
-import os
 import argparse
 import numpy as np
+import os
 from scipy.special import expit
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.metrics import roc_auc_score, accuracy_score
 
-from dataloader import get_dataloaders, set_seed
+from data_loader import get_dataloaders, set_seed
 from model import InteractionPredictionModel_NoAttention, InteractionPredictionModel
 
 
 def log_init():
-    return f"training_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    log_dir = "Log"
+    os.makedirs(log_dir, exist_ok=True)
+    log_filename = f"training_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+
+    return os.path.join(log_dir, log_filename)
 
 
 def log_write(logfile, msg):
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    log_dir = os.path.dirname(logfile)
+    if log_dir:
+        os.makedirs(log_dir, exist_ok=True)
+
     with open(logfile, 'a', encoding='utf-8') as f:
         f.write(f"[{ts}] {msg}\n")
 
 
 def train_model(train_loader, val_loader, model, optimizer, pos_weight=1.0, epochs=10, patience=3, seed=42, model_save_path="best_model.pth"):
+
     logfile = log_init()
 
     set_seed(seed)
@@ -57,7 +67,6 @@ def train_model(train_loader, val_loader, model, optimizer, pos_weight=1.0, epoc
                 running_loss += loss.item()
                 all_y.append(labels.detach().cpu().numpy())
                 all_logits.append(logits.detach().cpu().numpy())
-                raise
 
         all_y = np.concatenate(all_y).ravel()
         all_probs = expit(np.concatenate(all_logits).ravel())
@@ -110,14 +119,15 @@ def train_model(train_loader, val_loader, model, optimizer, pos_weight=1.0, epoc
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--disease_json', default='../Data/disease_list.json')
-    parser.add_argument('--phenotype_json', default='../Data/phenotype.json')
-    parser.add_argument('--positive_json', default='../Data/pos_datasets.json')
-    parser.add_argument('--negative_json', default='../Data/neg_datasets.json')
+    parser.add_argument('--disease_json', default='../Src/Data/disease_list.json')
+    parser.add_argument('--phenotype_json', default='../Src/Data/phenotype.json')
+    parser.add_argument('--positive_json', default='../Src/Data/pos_datasets.json')
+    parser.add_argument('--negative_json', default='../Src/Data/neg_datasets.json')
+    parser.add_argument('--text_json', default='../Src/Data/text_data.json')
     parser.add_argument('--model_out', default='model_no_attention.pth')
     parser.add_argument('--use_attention', action='store_true', help='Use attention model instead of mean-pool')
 
-    parser.add_argument('--batch_size', type=int, default=16)
+    parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--epochs', type=int, default=20)
     parser.add_argument('--patience', type=int, default=10)
     parser.add_argument('--seed', type=int, default=42)

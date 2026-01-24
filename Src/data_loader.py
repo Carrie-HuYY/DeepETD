@@ -123,23 +123,10 @@ class InteractionDataset(Dataset):
 
 def _load_json(path):
     """加载JSON文件"""
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        print(f"✅ 成功加载 JSON 文件: {os.path.abspath(path)}")
-        return data
-    except FileNotFoundError:
-        # 获取当前工作目录和绝对路径
-        current_dir = os.getcwd()
-        abs_path = os.path.abspath(path)
+    with open(path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    return data
 
-        # 详细错误信息
-        error_msg = f"""
-    ❌ JSON文件未找到！
-   请求的文件路径: {path}
-   绝对路径: {abs_path}
-   当前工作目录: {current_dir}
-"""
 
 def make_samples(positive_json_path: str,
                  negative_json_path: str,
@@ -215,15 +202,20 @@ def get_dataloaders(
 
 
 def extract_names_from_text_json(text_json_path: str):
-    """Return two lists aligned with text samples: protein_names, compound_names.
+    """
+    Return two lists aligned with text samples: protein_names, compound_names.
     Fallback to generated names if keys are missing.
     """
     data = _load_json(text_json_path)
+
     protein_names = []
     compound_names = []
+
     for i, entry in enumerate(data):
-        protein_names.append(entry.get('protein_name', f'protein_{i}'))
-        compound_names.append(entry.get('compound_name', f'compound_{i}'))
+
+        protein_names.append(entry.get('protein', f'protein_{i}'))
+        compound_names.append(entry.get('compound', f'compound_{i}'))
+
     return protein_names, compound_names
 
 

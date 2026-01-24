@@ -156,14 +156,13 @@ def make_samples(positive_json_path: str,
 
 
 def get_dataloaders(
-    disease_json_path: str,
-    phenotype_json_path: str,
-    positive_json_path: str,
-    negative_json_path: str,
-    text_json_path: str,
-    batch_size: int = 16,
-    val_split: float = 0.2,
-    seed: int = 42,
+        disease_json_path: str,
+        phenotype_json_path: str,
+        positive_json_path: str,
+        negative_json_path: str,
+        batch_size: int = 16,
+        val_split: float = 0.2,
+        seed: int = 42,
 ):
     set_seed(seed)
 
@@ -172,23 +171,20 @@ def get_dataloaders(
     )
 
     _, _, text_samples, all_samples = make_samples(
-        positive_json_path, negative_json_path, text_json_path
+        positive_json_path, negative_json_path,
     )
 
     train_samples, val_samples = train_test_split(all_samples, test_size=val_split, random_state=seed)
 
     train_dataset = InteractionDataset(train_samples, disease_encoder, phenotype_encoder, subcellular_location_encoder)
     val_dataset = InteractionDataset(val_samples, disease_encoder, phenotype_encoder, subcellular_location_encoder)
-    text_dataset = InteractionDataset(text_samples, disease_encoder, phenotype_encoder, subcellular_location_encoder)
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
-    text_loader = DataLoader(text_dataset, batch_size=batch_size, shuffle=False)
 
     return {
         'train': train_loader,
         'val': val_loader,
-        'text': text_loader,
         'encoders': {
             'disease': disease_encoder,
             'phenotype': phenotype_encoder,

@@ -19,6 +19,9 @@ class AttentionLayer(nn.Module):
 
 
 class InteractionPredictionModel(nn.Module):
+    """
+    带注意力机制的预测模型
+    """
     def __init__(self,
                  disease_embedding_dim=32,
                  phenotype_embedding_dim=16,
@@ -75,6 +78,9 @@ class InteractionPredictionModel(nn.Module):
 
 
 class InteractionPredictionModel_NoAttention(nn.Module):
+    """
+    无注意力机制的预测
+    """
     def __init__(self,
                  disease_embedding_dim=32,
                  phenotype_embedding_dim=16,

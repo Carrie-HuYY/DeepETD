@@ -1,7 +1,8 @@
 from datetime import datetime
-import argparse
 import numpy as np
 import os
+import json
+from types import SimpleNamespace
 from scipy.special import expit
 import torch
 import torch.nn as nn
@@ -11,8 +12,16 @@ from sklearn.metrics import roc_auc_score, accuracy_score
 from data_loader import get_dataloaders, set_seed
 from model import InteractionPredictionModel_NoAttention, InteractionPredictionModel
 
+import warnings
+warnings.filterwarnings("ignore")
+
 
 def log_init():
+    """
+    初始化日志文档
+    :return: 返回日志的路径及文件名
+    """
+
     log_dir = "Log"
     os.makedirs(log_dir, exist_ok=True)
     log_filename = f"training_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
@@ -21,6 +30,13 @@ def log_init():
 
 
 def log_write(logfile, msg):
+    """
+    将时间写入日志
+    :param logfile: 日志文件名
+    :param msg: 日志路径
+    :return:
+    """
+
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     log_dir = os.path.dirname(logfile)
@@ -31,7 +47,50 @@ def log_write(logfile, msg):
         f.write(f"[{ts}] {msg}\n")
 
 
-def train_model(train_loader, val_loader, model, optimizer, pos_weight=1.0, epochs=10, patience=3, seed=42, model_save_path="best_model.pth"):
+def load_config(config_path='config.json'):
+    """
+    加载JSON配置文件
+    """
+
+    with open(config_path, 'r', encoding='utf-8') as f:
+        config_dict = json.load(f)
+
+    # 转换为对象（更易访问）
+    def dict_to_obj(d):
+        if isinstance(d, dict):
+            return SimpleNamespace(**{k: dict_to_obj(v) for k, v in d.items()})
+        elif isinstance(d, list):
+            return [dict_to_obj(item) for item in d]
+        else:
+            return d
+
+    return dict_to_obj(config_dict)
+
+
+def train_model(train_loader,
+                val_loader,
+                model,
+                optimizer,
+                pos_weight=1.0,
+                epochs=10,
+                patience=3,
+                seed=42,
+                model_save_path="Result/best_model.pth"):
+    """
+    用于训练DeepETD模型
+
+    :param train_loader: 训练数据加载器
+    :param val_loader: 验证数据加载器
+    :param model: 待训练的深度学习模型
+    :param optimizer: 优化器
+    :param pos_weight: 正样本权重，用于处理类别不平衡问题，默认为 1
+    :param epochs: 最大训练轮数，默认为 10
+    :param patience: 早停耐心值（多少轮无改善后停止），默认为 3
+    :param seed: 随机种子，确保可重复性，默认为 42
+    :param model_save_path: 最佳模型保存路径
+
+    :return: 无返回值，但会保存最佳模型到指定路径
+    """
 
     logfile = log_init()
 
@@ -45,6 +104,7 @@ def train_model(train_loader, val_loader, model, optimizer, pos_weight=1.0, epoc
     patience_counter = 0
 
     log_write(logfile, "🚀 Starting training...")
+
     for epoch in range(epochs):
         log_write(logfile, f"\n🔁 Epoch {epoch+1}/{epochs}")
         model.train()
@@ -75,7 +135,6 @@ def train_model(train_loader, val_loader, model, optimizer, pos_weight=1.0, epoc
         avg_train_loss = running_loss / max(1, len(train_loader))
         log_write(logfile, f"✅ Train | Loss: {avg_train_loss:.4f} | AUC: {train_auc:.4f} | Acc: {train_acc:.4f}")
 
-        # ---------------- Val ----------------
         model.eval()
         v_loss = 0.0
         vy, vlogits = [], []
@@ -100,7 +159,6 @@ def train_model(train_loader, val_loader, model, optimizer, pos_weight=1.0, epoc
 
         log_write(logfile, f"🧪 Val   | Loss: {avg_val_loss:.4f} | AUC: {val_auc:.4f} | Acc: {val_acc:.4f}")
 
-        # checkpointing
         if val_auc > best_auc:
             best_auc = val_auc
             torch.save(model.state_dict(), model_save_path)
@@ -117,80 +175,60 @@ def train_model(train_loader, val_loader, model, optimizer, pos_weight=1.0, epoc
     log_write(logfile, f"🎉 Training completed. Best Val AUC: {best_auc:.4f}")
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--disease_json', default='../Src/Data/disease_list.json')
-    parser.add_argument('--phenotype_json', default='../Src/Data/phenotype.json')
-    parser.add_argument('--positive_json', default='../Src/Data/pos_datasets.json')
-    parser.add_argument('--negative_json', default='../Src/Data/neg_datasets.json')
-    parser.add_argument('--text_json', default='../Src/Data/text_data.json')
-    parser.add_argument('--model_out', default='model_no_attention.pth')
-    parser.add_argument('--use_attention', action='store_true', help='Use attention model instead of mean-pool')
+import yaml
 
-    parser.add_argument('--batch_size', type=int, default=128)
-    parser.add_argument('--epochs', type=int, default=20)
-    parser.add_argument('--patience', type=int, default=10)
-    parser.add_argument('--seed', type=int, default=42)
-    parser.add_argument('--lr', type=float, default=1e-3)
-    parser.add_argument('--weight_decay', type=float, default=1e-2)
-    parser.add_argument('--pos_weight', type=float, default=3.0, help='Positive class weight for BCEWithLogitsLoss')
 
-    args = parser.parse_args()
+def DeepETD_Train(config_path='config.yaml'):
+    """
+    从配置文件运行完整训练流程
+    """
 
-    # Load data
+    with open(config_path, 'r') as f:
+        cfg = yaml.safe_load(f)
+
     loaders = get_dataloaders(
-        disease_json_path=args.disease_json,
-        phenotype_json_path=args.phenotype_json,
-        positive_json_path=args.positive_json,
-        negative_json_path=args.negative_json,
-        text_json_path=args.text_json,
-        batch_size=args.batch_size,
-        val_split=0.2,
-        seed=args.seed,
+        disease_json_path=cfg['data']['disease_json'],
+        phenotype_json_path=cfg['data']['phenotype_json'],
+        positive_json_path=cfg['data']['positive_json'],
+        negative_json_path=cfg['data']['negative_json'],
+        text_json_path=cfg['data']['text_json'],
+        batch_size=cfg['training']['batch_size'],
+        val_split=cfg['training']['val_split'],
+        seed=cfg['training']['seed'],
     )
 
     enc = loaders['encoders']
 
-    # Build model with correct vocab sizes from encoders
-    num_diseases = len(enc['disease'].classes_)
-    num_phenotypes = len(enc['phenotype'].classes_)
-    num_sub = len(enc['subcellular'].classes_)
+    model_params = cfg['model']['params'].copy()
+    model_params.update({
+        'num_diseases': len(enc['disease'].classes_),
+        'num_phenotypes': len(enc['phenotype'].classes_),
+        'num_subcellular_locations': len(enc['subcellular'].classes_),
+    })
 
-    if args.use_attention:
-        model = InteractionPredictionModel(
-            disease_embedding_dim=64,
-            phenotype_embedding_dim=32,
-            subcellular_embedding_dim=32,
-            num_diseases=num_diseases,
-            num_phenotypes=num_phenotypes,
-            num_subcellular_locations=num_sub,
-            hidden_dim1=256,
-            hidden_dim2=128,
-            dropout_rate=0.1,
-        )
-    else:
-        model = InteractionPredictionModel_NoAttention(
-            disease_embedding_dim=64,
-            phenotype_embedding_dim=32,
-            subcellular_embedding_dim=32,
-            num_diseases=num_diseases,
-            num_phenotypes=num_phenotypes,
-            num_subcellular_locations=num_sub,
-            hidden_dim1=256,
-            hidden_dim2=128,
-            dropout_rate=0.1,
-        )
+    model_class = InteractionPredictionModel if cfg['model']['use_attention'] \
+        else InteractionPredictionModel_NoAttention
+    model = model_class(**model_params)
 
-    optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    train_cfg = cfg['training']
+    optimizer = optim.AdamW(
+        model.parameters(),
+        lr=train_cfg['lr'],
+        weight_decay=train_cfg['weight_decay']
+    )
 
     train_model(
         loaders['train'],
         loaders['val'],
         model,
         optimizer,
-        pos_weight=args.pos_weight,
-        epochs=args.epochs,
-        patience=args.patience,
-        seed=args.seed,
-        model_save_path=args.model_out,
+        pos_weight=train_cfg['pos_weight'],
+        epochs=train_cfg['epochs'],
+        patience=train_cfg['patience'],
+        seed=train_cfg['seed'],
+        model_save_path=cfg['model']['out_path'],
     )
+
+
+if __name__ == "__main__":
+    DeepETD_Train(config_path='config.yaml')

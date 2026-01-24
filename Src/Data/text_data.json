@@ -1,26 +1,281 @@
-{
-  "pmid": "12345678",
-  "title": "Title of the PubMed article",
-  "abstract": "Abstract text of the article...",
-  "keywords": ["keyword1", "keyword2"],
-  "entities": {
-    "genes": ["PRDX1", "SREBP2"],
-    "metabolites": ["norepinephrine", "sphingosine 1-phosphate"],
-    "diseases": ["atherosclerosis", "hypercalcemia"],
-    "phenotypes": ["oxidative stress", "lipid accumulation"],
-    "subcellular_localizations": ["mitochondria", "cytoplasm"]
-  },
-  "associations": [
+[
     {
-      "type": "metabolite-protein",
-      "metabolite": "norepinephrine",
-      "protein": "PRDX1",
-      "context": "atherosclerosis"
+        "compound": "Norepinephrine",
+        "protein": "TNF",
+        "compound_diseases": [
+            "Hypertension",
+            "Heart failure",
+            "Stroke",
+            "Obesity",
+            "Parkinson's disease",
+            "Diabetes mellitus",
+            "Alzheimer's disease",
+            "Neuropathy",
+            "Anxiety disorders",
+            "Epilepsy"
+        ],
+        "compound_phenotypes": [
+            "Proliferation",
+            "Inflammation",
+            "Differentiation",
+            "Oxidative stress",
+            "Apoptosis"
+        ],
+        "compound_subcellular_locations": [
+            "Nucleus",
+            "Plasma Membrane",
+            "Mitochondria",
+            "Vesicle",
+            "Cytoplasm"
+        ],
+        "protein_diseases": [
+            "Rheumatoid arthritis",
+            "Obesity",
+            "Inflammatory bowel disease",
+            "Crohn's disease",
+            "Psoriasis",
+            "atherosclerosis",
+            "Leukemia",
+            "Ulcerative colitis",
+            "Asthma",
+            "Diabetes mellitus"
+        ],
+        "protein_phenotypes": [
+            "Inflammation",
+            "Apoptosis",
+            "Proliferation",
+            "Oxidative stress",
+            "Differentiation"
+        ],
+        "protein_subcellular_locations": [
+            "Nucleus",
+            "Mitochondria",
+            "Peroxisome",
+            "Cytoplasm",
+            "Plasmid"
+        ]
     },
     {
-      "type": "disease-metabolite",
-      "disease": "atherosclerosis",
-      "metabolite": "norepinephrine"
-    }
-  ]
-}
+        "compound": "Norepinephrine",
+        "protein": "TG",
+        "compound_diseases": [
+            "Hypertension",
+            "Heart failure",
+            "Stroke",
+            "Obesity",
+            "Parkinson's disease",
+            "Diabetes mellitus",
+            "Alzheimer's disease",
+            "Neuropathy",
+            "Anxiety disorders",
+            "Epilepsy"
+        ],
+        "compound_phenotypes": [
+            "Proliferation",
+            "Inflammation",
+            "Differentiation",
+            "Oxidative stress",
+            "Apoptosis"
+        ],
+        "compound_subcellular_locations": [
+            "Nucleus",
+            "Plasma Membrane",
+            "Mitochondria",
+            "Vesicle",
+            "Cytoplasm"
+        ],
+        "protein_diseases": [
+            "Obesity",
+            "atherosclerosis",
+            "Diabetes mellitus",
+            "Alzheimer's disease",
+            "Hyperlipidemia",
+            "Hypertension",
+            "Thyroid cancer",
+            "Leukemia",
+            "Stroke",
+            "Nonalcoholic fatty liver disease"
+        ],
+        "protein_phenotypes": [
+            "Inflammation",
+            "Proliferation",
+            "Differentiation",
+            "Apoptosis",
+            "Oxidative stress"
+        ],
+        "protein_subcellular_locations": [
+            "Endoplasmic Reticulum",
+            "Peroxisome",
+            "Nucleus",
+            "Mitochondria",
+            "Plasma Membrane"
+        ]
+    },
+    {
+        "compound": "Norepinephrine",
+        "protein": "LDLR",
+        "compound_diseases": [
+            "Hypertension",
+            "Heart failure",
+            "Stroke",
+            "Obesity",
+            "Parkinson's disease",
+            "Diabetes mellitus",
+            "Alzheimer's disease",
+            "Neuropathy",
+            "Anxiety disorders",
+            "Epilepsy"
+        ],
+        "compound_phenotypes": [
+            "Proliferation",
+            "Inflammation",
+            "Differentiation",
+            "Oxidative stress",
+            "Apoptosis"
+        ],
+        "compound_subcellular_locations": [
+            "Nucleus",
+            "Plasma Membrane",
+            "Mitochondria",
+            "Vesicle",
+            "Cytoplasm"
+        ],
+        "protein_diseases": [
+            "atherosclerosis",
+            "Hyperlipidemia",
+            "Obesity",
+            "Alzheimer's disease",
+            "Hepatitis C",
+            "Stroke",
+            "Hypertension",
+            "Diabetes mellitus",
+            "Nonalcoholic fatty liver disease",
+            "Breast cancer"
+        ],
+        "protein_phenotypes": [
+            "Inflammation",
+            "Endocytosis",
+            "Proliferation",
+            "Lipid accumulation",
+            "Oxidative stress"
+        ],
+        "protein_subcellular_locations": [
+            "Peroxisome",
+            "Endoplasmic Reticulum",
+            "Plasma Membrane",
+            "Lysosome",
+            "Cytoplasm"
+        ]
+    },
+    {
+        "compound": "Norepinephrine",
+        "protein": "ACE",
+        "compound_diseases": [
+            "Hypertension",
+            "Heart failure",
+            "Stroke",
+            "Obesity",
+            "Parkinson's disease",
+            "Diabetes mellitus",
+            "Alzheimer's disease",
+            "Neuropathy",
+            "Anxiety disorders",
+            "Epilepsy"
+        ],
+        "compound_phenotypes": [
+            "Proliferation",
+            "Inflammation",
+            "Differentiation",
+            "Oxidative stress",
+            "Apoptosis"
+        ],
+        "compound_subcellular_locations": [
+            "Nucleus",
+            "Plasma Membrane",
+            "Mitochondria",
+            "Vesicle",
+            "Cytoplasm"
+        ],
+        "protein_diseases": [
+            "Hypertension",
+            "Heart failure",
+            "Diabetes mellitus",
+            "Stroke",
+            "atherosclerosis",
+            "Obesity",
+            "Alzheimer's disease",
+            "Chronic kidney disease",
+            "Retinopathy",
+            "Pneumonia"
+        ],
+        "protein_phenotypes": [
+            "Inflammation",
+            "Fibrosis",
+            "Oxidative stress",
+            "Proliferation",
+            "Apoptosis"
+        ],
+        "protein_subcellular_locations": [
+            "Nucleus",
+            "Plasma Membrane",
+            "Peroxisome",
+            "Mitochondria",
+            "Cytoplasm"
+        ]
+    },
+    {
+        "compound": "Norepinephrine",
+        "protein": "CD36",
+        "compound_diseases": [
+            "Hypertension",
+            "Heart failure",
+            "Stroke",
+            "Obesity",
+            "Parkinson's disease",
+            "Diabetes mellitus",
+            "Alzheimer's disease",
+            "Neuropathy",
+            "Anxiety disorders",
+            "Epilepsy"
+        ],
+        "compound_phenotypes": [
+            "Proliferation",
+            "Inflammation",
+            "Differentiation",
+            "Oxidative stress",
+            "Apoptosis"
+        ],
+        "compound_subcellular_locations": [
+            "Nucleus",
+            "Plasma Membrane",
+            "Mitochondria",
+            "Vesicle",
+            "Cytoplasm"
+        ],
+        "protein_diseases": [
+            "atherosclerosis",
+            "Obesity",
+            "Leukemia",
+            "Diabetes mellitus",
+            "Hyperlipidemia",
+            "Hypertension",
+            "Nonalcoholic fatty liver disease",
+            "Alzheimer's disease",
+            "Stroke",
+            "Breast cancer"
+        ],
+        "protein_phenotypes": [
+            "Differentiation",
+            "Inflammation",
+            "Lipid accumulation",
+            "Apoptosis",
+            "Proliferation"
+        ],
+        "protein_subcellular_locations": [
+            "Peroxisome",
+            "Plasma Membrane",
+            "Mitochondria",
+            "Endoplasmic Reticulum",
+            "Cytoplasm"
+        ]
+    }]

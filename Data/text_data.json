@@ -1,26 +1,42 @@
-{
-  "pmid": "12345678",
-  "title": "Title of the PubMed article",
-  "abstract": "Abstract text of the article...",
-  "keywords": ["keyword1", "keyword2"],
-  "entities": {
-    "genes": ["PRDX1", "SREBP2"],
-    "metabolites": ["norepinephrine", "sphingosine 1-phosphate"],
-    "diseases": ["atherosclerosis", "hypercalcemia"],
-    "phenotypes": ["oxidative stress", "lipid accumulation"],
-    "subcellular_localizations": ["mitochondria", "cytoplasm"]
+[
+  {
+    "compound": "L-Glutamic acid",
+    "protein": "GRIN1"
   },
-  "associations": [
-    {
-      "type": "metabolite-protein",
-      "metabolite": "norepinephrine",
-      "protein": "PRDX1",
-      "context": "atherosclerosis"
-    },
-    {
-      "type": "disease-metabolite",
-      "disease": "atherosclerosis",
-      "metabolite": "norepinephrine"
-    }
-  ]
-}
+  {
+    "compound": "Dopamine",
+    "protein": "DRD2"
+  },
+  {
+    "compound": "Sphingosine 1-phosphate",
+    "protein": "S1PR1"
+  },
+  {
+    "compound": "Testosterone",
+    "protein": "AR"
+  },
+  {
+    "compound": "Retinoic acid",
+    "protein": "RARA"
+  },
+  {
+    "compound": "Estradiol",
+    "protein": "ESR1"
+  },
+  {
+    "compound": "Prostaglandin E2",
+    "protein": "PTGER4"
+  },
+  {
+    "compound": "Adenosine",
+    "protein": "ADORA2A"
+  },
+  {
+    "compound": "Histamine",
+    "protein": "HRH1"
+  },
+  {
+    "compound": "Serotonin",
+    "protein": "HTR2A"
+  }
+]

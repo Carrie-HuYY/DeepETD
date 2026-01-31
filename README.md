@@ -7,13 +7,13 @@
 
 </div>
 
-## 项目简介
+## 简介
 DeepETD整合了多源生物医学数据，包括亚细胞定位、细胞表型和疾病数据。
 然后采用具有注意力机制的深度学习算法，聚焦数据最相关部分，有效捕捉代谢物与蛋白质间的复杂关系，
 增强了代谢物-蛋白质相互作用预测能力。预测结果存储在名为[EMTDD](http://otter-simm.com/EM/search.html)的数据库中。
 
 
-## 项目架构
+## 架构
 
 ```editorconfig
 ├── 项目根目录
@@ -30,7 +30,7 @@ DeepETD整合了多源生物医学数据，包括亚细胞定位、细胞表型�
 │   │   └── Data/
 │   │       ├── neg_datasets.json (负样本数据)
 │   │       ├── pos_datasets.json (正样本数据)
-│   │       ├── predict_datasets.json (预测数据)
+│   │       ├── predict_datasets.json (待预测数据)
 │   │       ├── phenotype.json (表型数据)
 │   │       ├── text_data.json (文本数据)
 │   │       └── disease_list.json (疾病列表)
@@ -42,5 +42,8 @@ DeepETD整合了多源生物医学数据，包括亚细胞定位、细胞表型�
 │   │   └── Log/ (日志目录)
 ```
 
-### data_loader.py
+### 使用
+
+`Result`中保存了预训练过的模型，数据来源详见论文（暂时还没发），可以更改`Data/text_data`
+
 

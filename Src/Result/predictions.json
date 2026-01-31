@@ -1,0 +1,19 @@
+{
+    "Norepinephrine": {
+        "Protein Names": [
+            "TG",
+            "ACE",
+            "CD36",
+            "LDLR",
+            "TNF"
+        ],
+        "Prediction Scores": [
+            0.6592088937759399,
+            0.655937671661377,
+            0.6447016000747681,
+            0.6192078590393066,
+            0.600734293460846
+        ],
+        "Score Type": "sigmoid_probability"
+    }
+}

@@ -1,5 +1,9 @@
 <div align="center">
 
+<p align="center">
+  <strong>DeepETD：基于多模态生物医学数据的相互作用预测深度学习框架</strong>
+</p>
+
 **选择语言 / Select Language:**
 
 [![English](https://img.shields.io/badge/🇺🇸_English-Document-007acc?style=for-the-badge&logo=book&logoColor=white)](README(CN_EN)/README_EN.md)
@@ -42,8 +46,40 @@ DeepETD整合了多源生物医学数据，包括亚细胞定位、细胞表型�
 │   │   └── Log/ (日志目录)
 ```
 
-### 使用
+## 使用
 
-`Result`中保存了预训练过的模型，数据来源详见论文（暂时还没发），可以更改`Data/text_data`
+`Result`中保存了预训练过的模型，数据来源详见论文（暂时还没发），
+如果想个性化自定义模型训练参数，可以修改`config.yaml`中的参数；
+通过更改`Data/text_data.json`内容，最终可以在`Result`中得到预测结果及其可视化
+
+```editorconfig
+## 输入数据text_data的标准格式
+## 分别为化合物/靶点/化合物-疾病/化合物-表型/化合物-亚细胞定位/靶点-疾病/靶点-亚细胞定位
+[
+    {
+        "compound": "Norepinephrine",
+        "protein": "TNF",
+        "compound_diseases": [
+            "Hypertension"
+        ],
+        "compound_phenotypes": [
+            "Proliferation"
+        ],
+        "compound_subcellular_locations": [
+            "Nucleus"
+        ],
+        "protein_diseases": [
+            "Rheumatoid arthritis"
+        ],
+        "protein_phenotypes": [
+            "Inflammation"
+        ],
+        "protein_subcellular_locations": [
+            "Nucleus"
+        ]
+    }
+```
+
+
 
 

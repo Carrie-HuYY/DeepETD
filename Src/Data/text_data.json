@@ -2,25 +2,6 @@
     {
         "compound": "Norepinephrine",
         "protein": "TNF",
-        "compound_diseases": [
-            "Hypertension",
-            "Heart failure",
-            "Stroke",
-            "Obesity",
-            "Parkinson's disease",
-            "Diabetes mellitus",
-            "Alzheimer's disease",
-            "Neuropathy",
-            "Anxiety disorders",
-            "Epilepsy"
-        ],
-        "compound_phenotypes": [
-            "Proliferation",
-            "Inflammation",
-            "Differentiation",
-            "Oxidative stress",
-            "Apoptosis"
-        ],
         "compound_subcellular_locations": [
             "Nucleus",
             "Plasma Membrane",
